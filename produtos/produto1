@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+*{margin:0;padding:0;box-sizing: border-box;}
+h2.tittle{
+	background-color:blue;
+	width:100%;
+	pading:20px;
+	text-align:center;
+}
+.carrinho-container{
+	display:flex;
+	margin-top:10px;
+}
+.produto{
+	width:33.3%;
+	padding:0 30px;
+}
+.produto img{
+	max-width:100%;
+	padding:0 30px;
+}
+.produto a{
+	display:block;
+	width:100%;
+	padding:18px;
+	color:black;
+	bakcground-color: purple;
+	text-align:center;
+	text-decoration: none;
+}
+</style>
+<link rel='stylesheet' href='index.css'>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <title>Example Home Page</title>
+</head>
+<body>
+<?php
+
+	
+		foreach ($_SESSION['carrinho'] as $key => $value){
+			//nome do produto, quantidade, preco
+			echo '<p>Nome: '.$value['nome'].' | Quantidade: '.$value['quantidade'].' | Preco: '.($value['quantidade']*$value['preco']).'</p>';
+			echo '</hr>';
+		}
+?>
+	
+	<div class="carrinho-container">
+<?php
+	
+	$items = array(['nome'=>'imagem1','imagem'=>'item1.png','preco'=>100],
+				   ['nome'=>'imagem2','imagem'=>'item2.jpg','preco'=>120],
+				   ['nome'=>'imagem3','imagem'=>'item3.png','preco'=>120]);
+		
+
+	foreach ($items as $key=>$value){
+?>
+
+	<div class="produto">
+		<img src="<?php echo $value['imagem']?>">
+		<a href="?adicionar=<?php echo $key ?>">Adicionar ao carrinho</a>
+	</div>
+<?php
+}
+?>
+	</div>
+<?php
+
+
+	if(isset($_GET['adicionar'])){
+		$idproduto = (int) $_GET['adicionar'];
+		if(isset($items[$idproduto])){
+			if(isset($_SESSION['carrinho'][$idproduto])){
+				$_SESSION['carrinho'][$idproduto]['quantidade']++;
+			}else{
+				$_SESSION['carrinho'][$idproduto] = array('quantidade'=>1,'nome'=>$items[$idproduto]['nome'],'preco'=>$items[$idproduto]['preco']);
+			}
+			echo '<script>alert("O item foi adicionado ao carrinho.")</script>';
+		}else{
+			die('Nao pode adicionar um produto que nao existe');
+		}
+	}
+
+	
+?>
+</body>
+</html>
